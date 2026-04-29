@@ -12,7 +12,8 @@ My unique things:
 2. I work remotely but still have several things that require physical travel, such as taking and picking up kid from school and practices
 3. I might want the ChiefOS to help with social media management and posting
 4. I want help drafting TCorg newsletters. This should be handled using the TCorg code, but is maybe a skill or shortcut to triggering. 
-5. I want a shutdown command that I can give the CoS. 
+5. I want help scheduling social posts. I'd prefer it if some Notion table contained all of my social posts and then the CoS could pull those out and schedule them. Either using custom code in the CoS or APIs to Buffer or Zapier or just on it's own. 
+6. I want a shutdown command that I can give the CoS. 
     - [ ] that command it will prompt me for all of the things in my head and/or in temporary storage.
     - [ ] I will copy and paste all the stuff I have
     - [ ] The CoS will separate items into TODOs / action items, knowledgebase items, calendar items.
