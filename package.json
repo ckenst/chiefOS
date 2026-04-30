@@ -13,6 +13,10 @@
     "notion:weekly-plan:todo": "node scripts/notion-weekly-plan.mjs --view todo",
     "notion:weekly-plan:summary": "node scripts/notion-weekly-plan.mjs --view summary",
     "notion:weekly-plan:dry-run": "node scripts/notion-weekly-plan.mjs --dry-run --view summary",
+    "notion:articles": "node scripts/notion-articles.mjs",
+    "notion:articles:list": "node scripts/notion-articles.mjs --view list",
+    "notion:articles:tracking": "node scripts/notion-articles.mjs --view tracking",
+    "notion:articles:dry-run": "node scripts/notion-articles.mjs --dry-run --view tracking",
     "test": "node --test"
   },
   "engines": {

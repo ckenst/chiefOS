@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  createWeeklyPlanItem,
   formatWeeklyPlan,
   listWeeklyPlan,
   parseWeeklyPlanArgs,
@@ -20,6 +21,35 @@ test("parseWeeklyPlanArgs supports weekly plan views", () => {
   assert.equal(args.view, "working");
   assert.equal(args.format, "json");
   assert.equal(args.dryRun, true);
+});
+
+test("parseWeeklyPlanArgs supports source-aware creation", () => {
+  const args = parseWeeklyPlanArgs([
+    "--action",
+    "add",
+    "--title",
+    "Getting hired by CTOs",
+    "--source-url",
+    "https://notion.so/article-id",
+  ]);
+
+  assert.equal(args.action, "add");
+  assert.equal(args.title, "Getting hired by CTOs");
+  assert.equal(args.sourceUrl, "https://notion.so/article-id");
+});
+
+test("createWeeklyPlanItem can attach a source URL", async () => {
+  const result = await createWeeklyPlanItem({
+    title: "Getting hired by CTOs",
+    sourceUrl: "https://notion.so/article-id",
+    dryRun: true,
+  });
+
+  assert.equal(result.dryRun, true);
+  assert.equal(result.method, "POST");
+  assert.equal(result.path, "/pages");
+  assert.equal(result.body.properties.Name.title[0].text.content, "Getting hired by CTOs");
+  assert.equal(result.body.properties.URL.url, "https://notion.so/article-id");
 });
 
 test("listWeeklyPlan supports dry-run summary", async () => {
@@ -55,6 +85,10 @@ test("summarizeWeeklyPlanPage extracts common fields", () => {
         type: "select",
         select: { name: "P1" },
       },
+      URL: {
+        type: "url",
+        url: "https://notion.so/source-page",
+      },
     },
   });
 
@@ -62,6 +96,7 @@ test("summarizeWeeklyPlanPage extracts common fields", () => {
   assert.equal(item.status, "Doing");
   assert.equal(item.dueDate, "2026-04-30");
   assert.equal(item.priority, "P1");
+  assert.equal(item.sourceUrl, "https://notion.so/source-page");
 });
 
 test("formatWeeklyPlan renders a chat-friendly summary", () => {

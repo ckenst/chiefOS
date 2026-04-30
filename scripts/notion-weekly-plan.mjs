@@ -25,6 +25,7 @@ try {
       title: args.title,
       status: args.status,
       dueDate: args.dueDate,
+      sourceUrl: args.sourceUrl,
     });
     console.log(JSON.stringify(result, null, 2));
   } else if (args.action === "move") {

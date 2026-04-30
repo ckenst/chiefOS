@@ -49,5 +49,7 @@ export function getConfig() {
     weeklyPlanDatabaseId:
       process.env.NOTION_WEEKLY_PLAN_DATABASE_ID ||
       fileEnv.NOTION_WEEKLY_PLAN_DATABASE_ID,
+    writingDatabaseId:
+      process.env.NOTION_WRITING_DATABASE_ID || fileEnv.NOTION_WRITING_DATABASE_ID,
   };
 }

@@ -1,8 +1,12 @@
 # Notion Integration
 
-ChiefOS can create and search items in a target Notion database called `Backlog`.
+ChiefOS uses Notion as its first durable operating layer. The current normalized destinations are:
 
-This is the first Notion destination. The integration is intentionally shaped so more targeted destinations can be added later, such as content ideas, calendar review queues, or project-specific databases.
+- `Weekly Plan`: active work for the current week.
+- `Backlog`: unscheduled tasks, ideas, reference captures, and someday items.
+- `Articles in Progress`: writing drafts and article ideas.
+
+The `Work` database may exist in `.env`, but it is intentionally skipped for now.
 
 ## Setup
 
@@ -14,6 +18,8 @@ This is the first Notion destination. The integration is intentionally shaped so
 ```sh
 NOTION_API=secret_from_notion
 NOTION_BACKLOG_DATABASE_ID=database_id_from_notion
+NOTION_WEEKLY_PLAN_DATABASE_ID=database_id_from_notion
+NOTION_WRITING_DATABASE_ID=database_id_from_notion
 ```
 
 ## Recommended Backlog Properties
@@ -71,6 +77,12 @@ Add an item:
 npm run notion:weekly-plan -- --action add --title "Return iPhone Mini to T-Mobile" --status Doing --due-date 2026-04-30
 ```
 
+Add a source-aware item:
+
+```sh
+npm run notion:weekly-plan -- --action add --title "Getting hired by CTOs" --status "To Do" --source-url "https://app.notion.com/p/source-article"
+```
+
 Move an item:
 
 ```sh
@@ -82,6 +94,28 @@ Set a due date:
 ```sh
 npm run notion:weekly-plan -- --action set-due-date --title "TCorg newsletter" --due-date 2026-04-30
 ```
+
+## Articles In Progress
+
+Use the Articles in Progress commands when the user asks what articles are in progress, or when ChiefOS needs to verify whether writing items have matching tracking tasks.
+
+List articles:
+
+```sh
+npm run notion:articles:list
+```
+
+Audit tracking:
+
+```sh
+npm run notion:articles:tracking
+```
+
+Article tracking rule:
+- Every page in `Articles in Progress` should have a matching tracking item in either `Weekly Plan` or `Backlog`.
+- The tracking item should set its `URL` property to the source article page URL.
+- Use `Weekly Plan` when the article is intended for this week.
+- Use `Backlog` when the article should be kept but is not part of the current week.
 
 ## Dry Run
 
@@ -106,22 +140,26 @@ npm run notion:backlog:search:dry-run
 ## Chat Contract
 
 The intended workflow is chat-first:
-- When the user asks ChiefOS to create something in Notion, the chat should use the Backlog command unless a more specific destination is configured.
+- When the user asks ChiefOS to create something in Notion, choose the most specific normalized destination.
 - When the user asks what they are working on, use the Weekly Plan `Doing` view.
 - When the user asks what they are supposed to work on this week, use the Weekly Plan summary view.
+- When the user asks about articles, use `Articles in Progress`.
+- When moving an article into the week, create a Weekly Plan item with its `URL` property pointing back to the source article page.
+- When keeping an article for later, create or use a Backlog item with its `URL` property pointing back to the source article page.
 - When the user asks a question that should be answered from Notion, the chat should search the relevant Notion destination before answering.
 - If Notion credentials or database IDs are missing, the chat should say what is missing rather than pretending it checked Notion.
-- If multiple Notion destinations exist later, the chat should choose the most specific destination first and fall back to Backlog for general capture.
 
 ## Destination Model
 
-Current destination:
-- `Backlog`: general capture database for early ChiefOS items
+Current destinations:
+- `Weekly Plan`: active weekly execution
+- `Backlog`: general capture and unscheduled tracking
+- `Articles in Progress`: writing inventory
 
 Likely future destinations:
-- content ideas
 - calendar review queue
 - knowledgebase notes
 - project-specific action lists
+- work database
 
 Keep workflow classification separate from destination routing. `/shutdown` should first classify items, then a later step can decide whether each item belongs in Backlog or a more specific database.

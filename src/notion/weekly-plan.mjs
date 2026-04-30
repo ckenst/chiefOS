@@ -17,6 +17,7 @@ export function parseWeeklyPlanArgs(argv) {
     status: undefined,
     title: undefined,
     dueDate: undefined,
+    sourceUrl: undefined,
     toStatus: undefined,
   };
 
@@ -78,6 +79,7 @@ export async function createWeeklyPlanItem({
   title,
   status = "To Do",
   dueDate,
+  sourceUrl,
   dryRun = false,
 }) {
   assertDatabaseId(databaseId, dryRun);
@@ -96,6 +98,10 @@ export async function createWeeklyPlanItem({
 
   if (dueDate) {
     body.properties["Due Date"] = { date: { start: dueDate } };
+  }
+
+  if (sourceUrl) {
+    body.properties.URL = { url: sourceUrl };
   }
 
   return client.createPage(body);
@@ -210,6 +216,7 @@ export function summarizeWeeklyPlanPage(page) {
     type: propertyToPlainText(properties.Type),
     tags: propertyToPlainText(properties.Tags),
     source: propertyToPlainText(properties.Source),
+    sourceUrl: propertyToPlainText(properties.URL),
     url: page.url,
   };
 }
