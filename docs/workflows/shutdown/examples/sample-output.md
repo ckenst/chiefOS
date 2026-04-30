@@ -15,5 +15,4 @@
 - Max's practice moved to Tuesdays at 5:30 PM
 
 ## Ambiguous / Needs Review
-- Schedule dentist appointment sometime in May
-  - This could also become a calendar item once a date and time are chosen.
+- None

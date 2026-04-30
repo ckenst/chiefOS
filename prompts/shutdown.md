@@ -1,10 +1,8 @@
-# Shutdown Command v1 Prompt
+# `/shutdown` Prompt Workflow
 
-Use this prompt workflow when the user invokes `/shutdown`.
+Use this prompt when the user invokes `/shutdown`.
 
-Canonical copy-paste prompt: `prompts/shutdown.md`
-
-## Step 1 - Capture Prompt
+## Assistant Capture Prompt
 
 Paste everything still in your head or sitting in temporary places.
 
@@ -26,14 +24,14 @@ When you paste it, I will sort it into:
 - Calendar items
 - Ambiguous / needs review
 
-## Step 2 - Classification Prompt
+## Classification Instructions
 
 When the user provides their brain dump, classify it using these rules:
 
 1. A TODO / action item is something the user needs to do, decide, follow up on, or deliver.
 2. A knowledgebase item is information worth preserving for later reference, but not something that requires immediate action.
 3. A calendar item is something that belongs on a date, time, schedule, reminder, or event list.
-4. If an item could fit multiple buckets:
+4. If an item could fit multiple buckets, choose the bucket that best matches the primary need:
    - prefer Calendar if the primary need is scheduling or time awareness
    - prefer TODO if the primary need is execution
    - prefer Knowledgebase if the primary need is reference
@@ -50,6 +48,7 @@ When the user provides their brain dump, classify it using these rules:
 - Keep the user's intent intact.
 - For calendar items, include any date or time information that appears in the input.
 - For ambiguous items, include a short reason why the item needs review.
+- Do not write to tasks, calendars, notes, files, or external services in v1.
 
 ## Output Template
 

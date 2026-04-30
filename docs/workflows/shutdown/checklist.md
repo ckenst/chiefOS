@@ -1,16 +1,22 @@
 # Shutdown Command - Questionnaire Checklist
 
 ## Command UX
-- Where will `/shutdown` live first? (Codex chat command, script, slash-command wrapper, other)
+- Where will `/shutdown` live first?
+    - Prompt workflow in chat
 - Which hosts need to support the same shutdown behavior later? (Codex, Goose, both)
 - Should the command always begin with the same capture prompt?
+    - Yes
 - Should it allow multiple pastes before processing?
+    - No for v1; use one freeform paste
 - Should it ask follow-up questions, or classify immediately from the pasted dump?
+    - Classify immediately; ambiguous items go into review
 
 ## Input Scope
 - What counts as "temporary storage"? (scratchpad, sticky notes, tabs, text files, emails to self, etc.)
 - Will the input be one freeform paste, or can you include headings and rough categories?
+    - One freeform paste; rough headings are allowed if already present
 - Should the CoS preserve the original raw dump somewhere?
+    - No automatic persistence in v1
 
 ## Classification Rules
 - What makes something a TODO / action item?
@@ -37,8 +43,11 @@
 
 ## Review Workflow
 - Should `/shutdown` end with a single grouped summary or separate sections with confirmation?
+    - Single grouped summary with separate sections
 - Do you want an approval step before anything is saved anywhere?
+    - Yes; v1 saves nothing automatically
 - How should uncategorized items be shown back to you?
+    - In Ambiguous / Needs Review with a short reason
 
 ## Safety & Boundaries
 - Confirm: no silent dropping of items

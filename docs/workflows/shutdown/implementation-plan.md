@@ -29,35 +29,21 @@ Why:
 
 ## Implementation Shape
 
-### Option A: Prompt-only workflow in Codex chat
-Use a saved prompt or slash-command wrapper that injects a structured instruction set.
+### v1 Decision: Prompt-only workflow
+Use `/shutdown` as a repeatable prompt workflow in chat. The source of truth is the prompt contract in this repo, not a local app, script, or integration.
 
 Pros:
 - Fastest to ship
 - No app code required
 - Easy to iterate on classification behavior
 
-Cons:
+Tradeoffs:
 - No persistence by default
-- No true command routing unless the host app supports slash commands
-
-### Option B: Small local command wrapper
-Build a lightweight script that:
-1. Detects `/shutdown`
-2. Shows the capture prompt
-3. Accepts pasted input
-4. Sends both to the model with a structured classification prompt
-5. Prints a formatted result
-
-Pros:
-- Repeatable workflow
-- Easier to add storage and integrations later
-
-Cons:
-- Requires choosing a runtime and command host
+- No external task, calendar, or knowledgebase writes in v1
+- The user manually reviews the grouped output before doing anything with it
 
 ## Recommendation
-Implement Option A first in Codex, but define the workflow in host-agnostic terms so it can later be reproduced in Goose or a wrapper script once the classification rules are stable.
+Implement `/shutdown` as a prompt workflow first, but define it in host-agnostic terms so it can later be reproduced in Codex, Goose, or another chat host without changing the core behavior.
 
 ## Portability Constraint
 
@@ -72,9 +58,9 @@ Design `/shutdown` as three layers:
    - The exact classification rules
    - The exact output structure
 3. Host adapter
-   - Codex skill
-   - Goose prompt/agent
-   - Future local wrapper or automation
+   - Codex prompt workflow
+   - Goose prompt workflow
+   - Future skill, wrapper, or automation only after the prompt behavior is stable
 
 Only the host adapter should be tool-specific. The workflow contract and prompt contract should remain shared across environments.
 
@@ -129,8 +115,8 @@ Store the shutdown prompt contract in this repo so the behavior stays consistent
 ### 2. Example inputs/outputs
 Create a small test fixture file with realistic end-of-day brain dumps and expected classifications.
 
-### 3. Optional wrapper script
-Later, add a script for repeatable execution.
+### 3. Optional future adapter
+Later, add a skill, wrapper, or automation only if prompt-only usage proves the workflow is valuable and stable.
 
 ## Suggested File Layout
 - `shutdown-command-spec-starter.md`
@@ -141,7 +127,7 @@ Later, add a script for repeatable execution.
 
 ## Phase Plan
 
-### Phase 1 - Manual MVP
+### Phase 1 - Prompt Workflow MVP
 - Finalize classification rules
 - Use `/shutdown` as a repeatable prompt pattern
 - Review results manually
@@ -152,28 +138,27 @@ Later, add a script for repeatable execution.
 - Add extraction of due dates, names, projects, and notes
 - Add an explicit ambiguous bucket
 
-### Phase 3 - Persistence
+### Phase 3 - Optional Persistence
 - Save raw dump plus classified output locally
 - Add a simple history log for later review
 
-### Phase 4 - Integrations
+### Phase 4 - Optional Integrations
 - TODOs -> task system
 - Knowledgebase items -> notes store
 - Calendar items -> calendar queue or direct event creation
 
-## What We Need To Decide Before Coding
-- Where `/shutdown` actually lives first
+## What We Need To Decide Before Adding Adapters
 - Whether v1 should save raw dumps locally
 - Whether one item can appear in multiple buckets
 - Whether the CoS should ask clarifying questions before producing output
 
 ## Recommended Defaults
-- Run `/shutdown` first in Codex chat
+- Run `/shutdown` first as a prompt workflow in chat
 - Accept one freeform paste
 - Return grouped review output only
 - Preserve ambiguous items instead of guessing
 - No external writes in v1
 - Keep the classification contract portable so the same behavior can be reused in Goose later
 
-## First Coding Step
-The best first build step is not an integration. It is creating example shutdown inputs and expected outputs so we can test classification quality before wiring this into any tool.
+## First Implementation Step
+The first implementation step is not code. It is using the prompt workflow with realistic shutdown dumps and refining the expected outputs until classification quality feels reliable.

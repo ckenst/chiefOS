@@ -1,0 +1,16 @@
+{
+  "name": "chiefos",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "notion:backlog": "node scripts/notion-backlog.mjs",
+    "notion:backlog:dry-run": "node scripts/notion-backlog.mjs --dry-run --title \"Example backlog item\" --content \"Created by chiefOS dry run.\"",
+    "notion:backlog:search": "node scripts/notion-backlog-search.mjs",
+    "notion:backlog:search:dry-run": "node scripts/notion-backlog-search.mjs --dry-run --query \"example\"",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
